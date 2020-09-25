@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-csv_columns = ['question', 'question_link', 'answer', 'vote_count']
+csv_columns = ['question', 'question_link', 'answer', 'vote_count','question_date']
 csv_file = "stackoverflow_airflow_questions.csv"
 csv.register_dialect(
     'mydialect',
@@ -32,11 +32,14 @@ for que in questions:
 
     answer = que.select_one('.status').getText().strip()
 
+    question_date = que.select_one('.relativetime').attrs['title'].strip()
+
     questions_data['questions'].append({
         "question": q,
         "question_link": q_link,
         "answer": answer,
-        "vote_count": vote_count
+        "vote_count": vote_count,
+        "question_date": question_date
     })
 
 try:
